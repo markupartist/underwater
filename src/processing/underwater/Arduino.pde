@@ -45,11 +45,12 @@ void decodeSerial(String line) {
       StringTokenizer statusTokenizer = new StringTokenizer(status, ",");
       while (statusTokenizer.hasMoreTokens ()) {
         String statusToken = statusTokenizer.nextToken();
-        println("statusToken: " + statusToken);
+        //println("statusToken: " + statusToken);
         if (statusToken.startsWith("c")) {
           // TODO: Swap current and target, probably makes more sense.
           motor.setCurrentPosition(getValueOfToken(statusToken, 1));
         } else if (statusToken.startsWith("t")) {
+          // TODO: Should we set this?
           int targetPosition = getValueOfToken(statusToken, 1);
           motor.setTargetPosition(targetPosition);
         }

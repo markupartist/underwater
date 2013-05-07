@@ -9,7 +9,7 @@ ArrayList<Motor> motors = new ArrayList<Motor>();
 EventEmitter eventEmitter = new EventEmitter();
 
 void setup() {
-  size(710,500);
+  size(720, 500);
   noStroke();
   
   cp5 = new ControlP5(this);
@@ -39,43 +39,50 @@ void setup() {
       Motor m = new Motor(motorId);
       m.addListener(eventEmitter);
       motors.add(m);
-      
 
-      int groupX = (x * (140 + 30)) + 30;
-      int groupY = (y * (100 + 30)) + 30;
+      int groupX = (x * (160 + 10)) + 20;
+      int groupY = (y * (100 + 20)) + 20;
       Group g = cp5.addGroup("motor " + motorId)
         .setPosition(groupX, groupY)
         .setBackgroundHeight(100)
-        .setWidth(140)
+        .setWidth(160)
         .setBackgroundColor(color(255,50));
         //.addListener(m);
-      cp5.addSlider("position" + motorId)
-        .setCaptionLabel("Position")
+      cp5.addSlider("targetpos" + motorId)
+        .setCaptionLabel("Target")
         .setPosition(10,10).setSize(10,60)
         .setRange(-1200, 1200)
         .setGroup(g)
         .addListener(m);
+      cp5.addSlider("currentpos" + motorId)
+        .setCaptionLabel("Current")
+        .setPosition(50,10).setSize(10,60)
+        .setRange(-1200, 1200)
+        .setGroup(g)
+        .setColor(new CColor(0xffaa0000, 0xff330000, 0xffff0000, 0xffffffff, 0xffffffff))
+        .lock()
+        .addListener(m);
       cp5.addBang("up" + motorId)
         .setCaptionLabel("Up")
-        .setPosition(70,10)
+        .setPosition(90,10)
         .setSize(20,20)
         .setGroup(g)
         .addListener(m);
       cp5.addBang("down" + motorId)
         .setCaptionLabel("Down")
-        .setPosition(100,10)
+        .setPosition(120,10)
         .setSize(20,20)
         .setGroup(g)
         .addListener(m);
       cp5.addBang("reset" + motorId)
         .setCaptionLabel("Reset")
-        .setPosition(70,50)
+        .setPosition(90,50)
         .setSize(20,20)
         .setGroup(g)
         .addListener(m);
       cp5.addBang("status" + motorId)
         .setCaptionLabel("Status")
-        .setPosition(100,50)
+        .setPosition(120,50)
         .setSize(20,20)
         .setGroup(g)
         .addListener(m);
@@ -92,5 +99,9 @@ void draw() {
   decodeSerial();
 }
 
-
+public class FakeMover {
+  public void update() {
+    
+  }
+}
 

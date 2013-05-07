@@ -5,12 +5,13 @@ public class Motor implements ControlListener {
   int minPosition;
   int maxPosition;
   int currentPosition;
-  int targetPosition = 0;
+  int targetPosition;
   ArrayList<MotorListener> listeners;
 
   public Motor(int motorId) {
     this.motorId = motorId;
     this.currentPosition = 0;
+    this.targetPosition = 0;
     this.minPosition = -1200;
     this.maxPosition = 1200;
   }
@@ -33,7 +34,7 @@ public class Motor implements ControlListener {
       this.stepUp();
     } else if (command.startsWith("down")) {
       this.stepDown();
-    } else if (command.startsWith("position")) {
+    } else if (command.startsWith("targetpos")) {
       this.target(int(event.getController().getValue()));
     }
   }
@@ -43,38 +44,43 @@ public class Motor implements ControlListener {
   }
 
   public void reset() {
-    if (this.currentPosition != 0) {
-      sendCommand(String.format("m%sr", motorId));
-      setCurrentPosition(0);
-    }
+    sendCommand(String.format("m%sr", motorId));
+    setCurrentPosition(0);
+    setTargetPosition(0);
   }
 
   public void target(int position) {
-    if (position != this.currentPosition) {
+    if (position != this.targetPosition) {
       sendCommand(String.format("m%st%s", motorId, position));
-      setCurrentPosition(position);
+      setTargetPosition(position);
     }
   }
 
   public void stepUp() {
-    int position = this.currentPosition + 1;
+    int position = this.targetPosition + 1;
     target(position);
   }
 
   public void stepDown() {
-    int position = this.currentPosition - 1;
+    int position = this.targetPosition - 1;
     target(position);    
   }
 
   public void setTargetPosition(int position) {
     if (position != this.targetPosition) {
       this.targetPosition = position;
+      /*
       if (listeners != null) {
         for (MotorListener l : listeners) {
           // pass current as a new integer instead.
           l.position(this, this.targetPosition);
         }
       }
+      */
+
+      // TODO: This could be moved into a motor listener, or should be supported by ControlP5?
+      Slider slider = ((Slider)cp5.getController("targetpos" + motorId));
+      slider.setValue(this.targetPosition);
     }
   }
 
@@ -84,18 +90,16 @@ public class Motor implements ControlListener {
     if (currentPosition != this.currentPosition) {
       this.currentPosition = currentPosition;
 
-      /*
       if (listeners != null) {
         for (MotorListener l : listeners) {
           // pass current as a new integer instead.
           l.position(this, this.currentPosition);
         }
       }
-      */
 
       // TODO: This could be moved into a motor listener, or should be supported by ControlP5?
-      Slider slider = ((Slider)cp5.getController("position" + motorId));
-      slider.setValue(this.currentPosition);    
+      Slider slider = ((Slider)cp5.getController("currentpos" + motorId));
+      slider.setValue(this.currentPosition);
     }
   }
 }
