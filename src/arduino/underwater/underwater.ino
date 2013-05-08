@@ -47,12 +47,6 @@ void setup() {
     steppers[i].setMaxSpeed(300.0);
     steppers[i].setAcceleration(150.0);
   }
-
-  /*
-  for (int i = 0; i < STEPPER_COUNT; i++) {
-    steppers[i].moveTo(200);
-  }
-  */
 }
 
 void loop() {
