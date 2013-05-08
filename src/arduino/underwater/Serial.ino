@@ -55,6 +55,9 @@ void loopSerial() {
 //   t = set new target position for the motor.
 //   r = reset the current position of the motor.
 //   q = query the status of current and target position.
+//   b = break, stop the motor.
+//   h = home, go to home postion, 0.
+//   s = speed
 // m0m600
 void executeSerialCommand() {
   Serial.print("Executing ");
@@ -80,6 +83,19 @@ void executeSerialCommand() {
           break;
         case 'q':
           executeQuery(motorIndex);
+          break;
+        case 'b':
+          steppers[motorIndex].stop();
+          break;
+        case 'h':
+          steppers[motorIndex].moveTo(0);
+          break;
+        case 's':
+          {
+            int value = decode(3);
+            steppers[motorIndex].setMaxSpeed(value);
+            // TODO: Might need to set speed again.
+          }
           break;
       }
       break;
@@ -123,6 +139,9 @@ void executeQuery(int motorIndex) {
   Serial.print(',');
   Serial.print('t');
   Serial.print(steppers[motorIndex].targetPosition());
+  Serial.print(',');
+  Serial.print('s');
+  Serial.print(steppers[motorIndex].speed());
   Serial.print(',');
   Serial.println();
 }
