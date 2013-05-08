@@ -58,6 +58,7 @@ void loopSerial() {
 //   b = break, stop the motor.
 //   h = home, go to home postion, 0.
 //   s = speed
+//   a = acceleration
 // m0m600
 void executeSerialCommand() {
   Serial.print("Executing ");
@@ -94,7 +95,12 @@ void executeSerialCommand() {
           {
             int value = decode(3);
             steppers[motorIndex].setMaxSpeed(value);
-            // TODO: Might need to set speed again.
+          }
+          break;
+        case 'a':
+          {
+            int value = decode(3);
+            steppers[motorIndex].setAcceleration(value);
           }
           break;
       }
