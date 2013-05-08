@@ -36,6 +36,7 @@ void decodeSerial() {
 }
 
 void decodeSerial(String line) {
+  println(line);
   if (line.startsWith("m")) {
     int motorId = Character.getNumericValue(line.charAt(1));
     if (motors.size() < motorId) {
@@ -50,20 +51,24 @@ void decodeSerial(String line) {
       while (queryTokenizer.hasMoreTokens ()) {
         String queryToken = queryTokenizer.nextToken();
         if (queryToken.startsWith("c")) {
-          motor.setCurrentPosition(getValueOfToken(queryToken, 1));
+          motor.setCurrentPosition(int(getValueOfToken(queryToken, 1)));
         } else if (queryToken.startsWith("t")) {
-          int targetPosition = getValueOfToken(queryToken, 1);
+          int targetPosition = int(getValueOfToken(queryToken, 1));
           motor.setTargetPosition(targetPosition);
+        } else if (queryToken.startsWith("s")) {
+          float currentSpeed = getValueOfToken(queryToken, 1);
+          motor.setCurrentSpeed(currentSpeed);
         }
       }
     }
   }
 }
 
-int getValueOfToken(String token, int position) {
+float getValueOfToken(String token, int position) {
   String value = token.substring(position);
   try {
-    return Integer.valueOf(value);
+    //return Integer.valueOf(value);
+    return Float.valueOf(value);
   } catch (NumberFormatException e) {
     println("Unable to decode '"+value+"'of '"+token+"' !");
     return 0;

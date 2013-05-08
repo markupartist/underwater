@@ -9,15 +9,15 @@ ArrayList<Motor> motors = new ArrayList<Motor>();
 EventEmitter eventEmitter = new EventEmitter();
 
 void setup() {
-  size(720, 500);
+  size(800, 600);
   noStroke();
   
   cp5 = new ControlP5(this);
   //cp5.setColor(new CColor(0xffaa0000, 0xff330000, 0xffff0000, 0xffffffff, 0xffffffff));  
 
   Group emitterGroup = cp5.addGroup("emitter")
-    .setPosition(30, 300)
-    .setBackgroundHeight(100)
+    .setPosition(10, 20)
+    .setBackgroundHeight(50)
     .setWidth(140)
     .setBackgroundColor(color(255,50));
   cp5.addToggle("toggleEmitter")
@@ -40,12 +40,15 @@ void setup() {
       m.addListener(eventEmitter);
       motors.add(m);
 
-      int groupX = (x * (160 + 10)) + 20;
-      int groupY = (y * (100 + 20)) + 20;
+      int groupWidth = 180;
+      int groupHeight = 180;
+
+      int groupX = (x * (groupWidth + 10)) + 10;
+      int groupY = (y * (groupHeight + 20)) + 100;
       Group g = cp5.addGroup("motor " + motorId)
         .setPosition(groupX, groupY)
-        .setBackgroundHeight(100)
-        .setWidth(160)
+        .setBackgroundHeight(groupHeight)
+        .setWidth(groupWidth)
         .setBackgroundColor(color(255,50));
         //.addListener(m);
       cp5.addSlider("targetpos" + motorId)
@@ -74,6 +77,12 @@ void setup() {
         .setSize(20,20)
         .setGroup(g)
         .addListener(m);
+      cp5.addBang("stop" + motorId)
+        .setCaptionLabel("Stop")
+        .setPosition(150,10)
+        .setSize(20,20)
+        .setGroup(g)
+        .addListener(m);
       cp5.addBang("reset" + motorId)
         .setCaptionLabel("Reset")
         .setPosition(90,50)
@@ -86,7 +95,38 @@ void setup() {
         .setSize(20,20)
         .setGroup(g)
         .addListener(m);
-
+      cp5.addBang("home" + motorId)
+        .setCaptionLabel("Home")
+        .setPosition(150,50)
+        .setSize(20,20)
+        .setGroup(g)
+        .addListener(m);
+      cp5.addSlider("speed" + motorId)
+        .setCaptionLabel("Speed")
+        .setPosition(10, 90)
+        .setSize(60, 20)
+        .setRange(0, 700)
+        .setGroup(g)
+        .setValue(300) // Need to match default conf in the Arduino.
+        .addListener(m);
+      cp5.addSlider("acceleration" + motorId)
+        .setCaptionLabel("Acceleration")
+        .setPosition(10, 120)
+        .setSize(60, 20)
+        .setRange(0, 700)
+        .setGroup(g)
+        .setValue(150) // Need to match default conf in the Arduino.
+        .addListener(m);
+      cp5.addToggle("toggle" + motorId)
+        .setCaptionLabel("Enable")
+        .setPosition(10, 150).setSize(10,10)
+        .setGroup(g)
+        .setValue(1.0)
+        .addListener(eventEmitter);
+      cp5.addTextlabel("querylabel" + motorId)
+        .setText(m.print())
+        .setPosition(50, 150)
+        .setGroup(g);
       motorId++;
     }
   }
