@@ -77,8 +77,7 @@ public class Motor implements ControlListener {
   public void setCurrentSpeed(float currentSpeed) {
     this.currentSpeed = currentSpeed;
 
-    Textlabel label = ((Textlabel)cp5.getController("querylabel" + motorId));
-    label.setText(this.print());
+    updateUi();
   }
 
   /**
@@ -130,9 +129,8 @@ public class Motor implements ControlListener {
   public void setTargetPosition(int position) {
     if (position != this.targetPosition) {
       this.targetPosition = position;
-      // TODO: This could be moved into a motor listener, or should be supported by ControlP5?
-      Slider slider = ((Slider)cp5.getController("targetpos" + motorId));
-      slider.setValue(this.targetPosition);
+
+      updateUi();
     }
   }
 
@@ -149,9 +147,7 @@ public class Motor implements ControlListener {
         }
       }
 
-      // TODO: This could be moved into a motor listener, or should be supported by ControlP5?
-      Slider slider = ((Slider)cp5.getController("currentpos" + motorId));
-      slider.setValue(this.currentPosition);
+      updateUi();
     }
   }
 
@@ -160,6 +156,19 @@ public class Motor implements ControlListener {
       this.currentPosition,
       this.targetPosition,
       this.currentSpeed);
+  }
+
+  public void updateUi() {
+    // TODO: These should be moved out of this class.
+
+    Slider currentPos = ((Slider)cp5.getController("currentpos" + motorId));
+    currentPos.setValue(this.currentPosition);
+
+    Slider targetPos = ((Slider)cp5.getController("targetpos" + motorId));
+    targetPos.setValue(this.targetPosition);
+
+    Textlabel queryLabel = ((Textlabel)cp5.getController("querylabel" + motorId));
+    queryLabel.setText(this.print());
   }
 }
 

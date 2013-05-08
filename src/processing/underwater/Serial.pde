@@ -43,6 +43,7 @@ void decodeSerial(String line) {
       println(String.format("Failed to match motor id with motors conf. (id: %s, motors: %s)", motorId, motors.size()));
       return;
     }
+    // TODO: Move parsing into Motor, to have the protocol in one place.
     Motor motor = motors.get(motorId);
     String command = line.substring(2);
     if (command.startsWith("q")) {
