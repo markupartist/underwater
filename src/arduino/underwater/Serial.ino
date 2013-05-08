@@ -59,7 +59,6 @@ void loopSerial() {
 //   h = home, go to home postion, 0.
 //   s = speed
 //   a = acceleration
-// m0m600
 void executeSerialCommand() {
   Serial.print("Executing ");
   Serial.println(inputBuffer);
