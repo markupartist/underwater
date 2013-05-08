@@ -38,16 +38,7 @@ void loopSerial() {
   for (int i = 0; i < STEPPER_COUNT; i++) {
     if (steppers[i].currentPosition() == steppers[i].targetPosition()) {
       if (statusReported[i] != true) {
-        Serial.print('m');
-        Serial.print(i, DEC);
-        Serial.print('q');
-        Serial.print('c');
-        Serial.print(steppers[i].currentPosition());
-        Serial.print(',');
-        Serial.print('t');
-        Serial.print(steppers[i].targetPosition());
-        Serial.print(',');
-        Serial.println();
+        executeQuery(i);
         // Update status reported to avoid sending the same command multiple times.
         statusReported[i] = true;
       }
@@ -55,22 +46,6 @@ void loopSerial() {
       statusReported[i] = false;
     }
   }
-
-  // 
-  /*
-  for (int i = 0; i < STEPPER_COUNT; i++) {
-    if (steppers[i].currentPosition() == steppers[i].targetPosition()) {
-      Serial.print('m');
-      Serial.print(i, DEC);
-      Serial.print('c');
-      Serial.print(steppers[i].currentPosition());
-      Serial.print(',');
-      Serial.print('t');
-      Serial.print(steppers[i].targetPosition());
-      Serial.println();      
-    }
-  }
-  */
 }
 
 // Execture a command sent over serial.
@@ -104,16 +79,7 @@ void executeSerialCommand() {
           }
           break;
         case 'q':
-          Serial.print('m');
-          Serial.print(motorIndex, DEC);
-          Serial.print('q');
-          Serial.print('c');
-          Serial.print(steppers[motorIndex].currentPosition());
-          Serial.print(',');
-          Serial.print('t');
-          Serial.print(steppers[motorIndex].targetPosition());
-          Serial.print(',');
-          Serial.println();
+          executeQuery(motorIndex);
           break;
       }
       break;
@@ -146,5 +112,18 @@ int decode(unsigned char startPosition) {
   else {
     return result;
   }
+}
+
+void executeQuery(int motorIndex) {
+  Serial.print('m');
+  Serial.print(motorIndex, DEC);
+  Serial.print('q');
+  Serial.print('c');
+  Serial.print(steppers[motorIndex].currentPosition());
+  Serial.print(',');
+  Serial.print('t');
+  Serial.print(steppers[motorIndex].targetPosition());
+  Serial.print(',');
+  Serial.println();
 }
 
