@@ -5,7 +5,7 @@ StringBuilder serialStringBuilder = new StringBuilder();
 
 void setupSerialConfig() {
   try {
-    String portName = Serial.list()[6]; // TODO: Make configurable.
+    String portName = Serial.list()[4]; // TODO: Make configurable.
     println(portName);
     arduinoPort = new Serial(this, portName, 9600);
     arduinoConnected = true;
@@ -38,20 +38,21 @@ void decodeSerial() {
 void decodeSerial(String line) {
   if (line.startsWith("m")) {
     int motorId = Character.getNumericValue(line.charAt(1));
+    if (motors.size() < motorId) {
+      println(String.format("Failed to match motor id with motors conf. (id: %s, motors: %s)", motorId, motors.size()));
+      return;
+    }
     Motor motor = motors.get(motorId);
     String command = line.substring(2);
-    if (command.startsWith("s")) {
-      String status = line.substring(3);
-      StringTokenizer statusTokenizer = new StringTokenizer(status, ",");
-      while (statusTokenizer.hasMoreTokens ()) {
-        String statusToken = statusTokenizer.nextToken();
-        //println("statusToken: " + statusToken);
-        if (statusToken.startsWith("c")) {
-          // TODO: Swap current and target, probably makes more sense.
-          motor.setCurrentPosition(getValueOfToken(statusToken, 1));
-        } else if (statusToken.startsWith("t")) {
-          // TODO: Should we set this?
-          int targetPosition = getValueOfToken(statusToken, 1);
+    if (command.startsWith("q")) {
+      String query = line.substring(3);
+      StringTokenizer queryTokenizer = new StringTokenizer(query, ",");
+      while (queryTokenizer.hasMoreTokens ()) {
+        String queryToken = queryTokenizer.nextToken();
+        if (queryToken.startsWith("c")) {
+          motor.setCurrentPosition(getValueOfToken(queryToken, 1));
+        } else if (queryToken.startsWith("t")) {
+          int targetPosition = getValueOfToken(queryToken, 1);
           motor.setTargetPosition(targetPosition);
         }
       }

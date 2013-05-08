@@ -40,7 +40,7 @@ void loopSerial() {
       if (statusReported[i] != true) {
         Serial.print('m');
         Serial.print(i, DEC);
-        Serial.print('s');
+        Serial.print('q');
         Serial.print('c');
         Serial.print(steppers[i].currentPosition());
         Serial.print(',');
@@ -79,6 +79,7 @@ void loopSerial() {
 // Commands
 //   t = set new target position for the motor.
 //   r = reset the current position of the motor.
+//   q = query the status of current and target position.
 // m0m600
 void executeSerialCommand() {
   Serial.print("Executing ");
@@ -102,10 +103,10 @@ void executeSerialCommand() {
             // TODO: Might need to set speed again.
           }
           break;
-        case 's':
+        case 'q':
           Serial.print('m');
           Serial.print(motorIndex, DEC);
-          Serial.print('s');
+          Serial.print('q');
           Serial.print('c');
           Serial.print(steppers[motorIndex].currentPosition());
           Serial.print(',');

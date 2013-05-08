@@ -40,7 +40,7 @@ public class Motor implements ControlListener {
   }
 
   public void query() {
-    sendCommand(String.format("m%ss", motorId));
+    sendCommand(String.format("m%sq", motorId));
   }
 
   public void reset() {

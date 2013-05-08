@@ -2,7 +2,7 @@ import java.util.*;
 import processing.serial.*;
 import controlP5.*;
 
-static int STEPPER_COUNT = 4;
+static int STEPPER_COUNT = 5;
 ControlP5 cp5;
 Serial arduinoPort;
 ArrayList<Motor> motors = new ArrayList<Motor>();
